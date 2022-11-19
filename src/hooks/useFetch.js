@@ -1,45 +1,44 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function useFetch(page) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [list, setList] = useState([]); 
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [list, setList] = useState([]);
 
-  useEffect(() => {
-    
-    const controller = new AbortController();
-    const sendQuery = async () => {
-      try {
-        setLoading(true);
-        setError(false);
+    useEffect(() => {
+        if (page === 0) {
+            return;
+        }
 
-        const res = await axios.get(
-          `http://localhost:8080/photos?page=${page}`, {
-             signal: controller.signal,
-             headers:{
-              'Range':'photos='+(page-1)*40+'-'+40*page
+        const controller = new AbortController();
+        const sendQuery = async () => {
+            try {
+                setLoading(true);
+                setError(false);
+
+                const res = await axios.get(`http://localhost:8080/photos`, {
+                    signal: controller.signal,
+                    headers: {
+                        Range: 'photos=' + (page - 1) * 40 + '-' + 40 * page,
+                    },
+                });
+
+                setList((prev) => [...new Set([...prev, ...res.data])]);
+                setLoading(false);
+            } catch (err) {
+                setError(err);
             }
-          });
+        };
 
-          setList((prev) => [
-            ...new Set([...prev, ...res.data])
-              ]);
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-      }
-    }
+        sendQuery();
 
-    sendQuery();
+        return () => {
+            controller.abort();
+        };
+    }, [page]);
 
-    return () => {
-      controller.abort();
-    };
-   
-  }, [page]);
-
-  return { loading, error, list };
+    return { loading, error, list };
 }
 
 export default useFetch;
