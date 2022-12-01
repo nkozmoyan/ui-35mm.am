@@ -47,7 +47,7 @@ const Photos = () => {
       {error && <p>Error!</p>}
       {showModal ? (
         <Modal>
-          <div className="photo-modal">
+          <div className="photo-modal" onClick={toggleModal}>
             <img
               alt={photo.photoTitle}
               src={'http://post35mm.com/' + photo.url.orig}
@@ -55,7 +55,7 @@ const Photos = () => {
           </div>
         </Modal>
       ) : (
-        list.map((photo, i) => (
+        list.map((photo) => (
           <Photo
             onClick={toggleModal}
             key={photo.photoId}

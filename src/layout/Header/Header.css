@@ -1,15 +1,5 @@
-.header {
-    background-color: black;
-    color: white;
-    margin: 0px;
-    height: 48px;;
-    position: fixed;
-    top:0;
-    width: 100%;
-}
-
-.header > h1{
-    font-size: 1.75em;
-    line-height: 1;
-    margin: 12px 0px 0px 200px;
+.header > h1 {
+  font-size: 1.75em;
+  line-height: 1;
+  margin: 12px 0px 0px 200px;
 }
