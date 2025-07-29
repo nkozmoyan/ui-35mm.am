@@ -1,5 +1,8 @@
 import './Header.css';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
 
 const StyledHeader = styled.header`
   background-color: black;
@@ -22,12 +25,31 @@ const Button = styled.button`
 `;
 
 export default function Header() {
+  const { user, logout } = useContext(AuthContext);
   return (
     <StyledHeader className="header">
       <h1>35mm.am</h1>
       <div>
-        <Button>Log In</Button>
-        <Button>Sign Up</Button>
+        {user ? (
+          <>
+            <Link to="/profile">
+              <Button>Profile</Button>
+            </Link>
+            <Link to="/settings">
+              <Button>Settings</Button>
+            </Link>
+            <Button onClick={logout}>Logout</Button>
+          </>
+        ) : (
+          <>
+            <Link to="/signin">
+              <Button>Log In</Button>
+            </Link>
+            <Link to="/signup">
+              <Button>Sign Up</Button>
+            </Link>
+          </>
+        )}
       </div>
     </StyledHeader>
   );
