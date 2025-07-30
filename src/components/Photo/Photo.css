@@ -42,6 +42,20 @@
   margin-bottom: 1em;
 }
 
+.photo-actions span {
+  margin: 0 0.5em;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+.photo-actions .liked {
+  color: red;
+}
+
+.photo-actions .saved {
+  color: green;
+}
+
 @media screen and (max-width: 1440px) {
   .photo {
     min-width: 33%;

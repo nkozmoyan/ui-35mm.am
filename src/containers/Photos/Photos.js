@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, Children } from 'react';
 import Modal from '../../components/Modal/Modal';
 import Photo from '../../components/Photo/Photo';
+import { Comments } from '../../components/Comments/Comments';
 import useFetch from '../../hooks/useFetch';
 
 const Photos = () => {
@@ -9,6 +10,8 @@ const Photos = () => {
   const [photo, setPhoto] = useState({});
   const { loading, error, list } = useFetch(page);
   const loader = useRef(null);
+
+  const IMAGE_BASE = process.env.REACT_APP_IMAGE_BASE_URL || 'http://post35mm.com/';
 
   const handleObserver = useCallback((entries) => {
     const target = entries[0];
@@ -50,8 +53,9 @@ const Photos = () => {
           <div className="photo-modal" onClick={toggleModal}>
             <img
               alt={photo.photoTitle}
-              src={'http://post35mm.com/' + photo.url.orig}
+              src={IMAGE_BASE + photo.url.orig}
             ></img>
+            <Comments photoId={photo.photoId} />
           </div>
         </Modal>
       ) : (
