@@ -25,6 +25,3 @@ Create a `.env` file or set these variables in your environment when starting th
 npm start
 ```
 
-## Tests
-
-At the moment no tests are configured.
