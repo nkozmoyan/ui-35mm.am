@@ -3,6 +3,9 @@ import { useState } from 'react';
 
 const IMAGE_BASE = process.env.REACT_APP_IMAGE_BASE_URL || 'http://post35mm.com/';
 
+const IMAGE_BASE =
+  process.env.REACT_APP_IMAGE_BASE_URL || 'http://post35mm.com/';
+
 export default function Photo({ photo, onClick }) {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);

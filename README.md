@@ -25,9 +25,3 @@ Create a `.env` file or set these variables in your environment when starting th
 npm start
 ```
 
-## Tests
-Run the test suite:
-
-```bash
-npm test
-```
