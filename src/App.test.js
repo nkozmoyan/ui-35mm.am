@@ -3,8 +3,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import App from './App';
 
-jest.mock('axios', () => ({
+jest.mock('./api/client', () => ({
   get: jest.fn().mockResolvedValue({ data: [] }),
+  post: jest.fn(),
+  head: jest.fn(),
 }));
 
 test('renders 35mm.am header', () => {
