@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+import api from '../../api/client';
 
 export const Comments = ({ photoId }) => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
     if (!photoId) return;
-    axios
-      .get(`${API_URL}/photos/${photoId}/comments`)
+    api
+      .get(`/photos/${photoId}/comments`)
       .then((res) => setComments(res.data))
       .catch(() => setComments([]));
   }, [photoId]);

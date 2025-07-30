@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+import api from '../api/client';
 
 function useFetch(page) {
     const [loading, setLoading] = useState(true);
@@ -19,7 +17,7 @@ function useFetch(page) {
                 setLoading(true);
                 setError(false);
 
-                const res = await axios.get(`${API_URL}/photos`, {
+                const res = await api.get('/photos', {
                     signal: controller.signal,
                     headers: {
                         Range: 'photos=' + (page - 1) * 40 + '-' + 40 * page,
