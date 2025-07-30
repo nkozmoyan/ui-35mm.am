@@ -28,7 +28,10 @@ export default function Header() {
   const { user, logout } = useContext(AuthContext);
   return (
     <StyledHeader className="header">
-      <h1>35mm.am</h1>
+      <h1>
+        {' '}
+        <Link to="/">35mm.am</Link>
+      </h1>
       <div>
         {user ? (
           <>
