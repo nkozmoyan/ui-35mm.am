@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
 import Photo from '../../components/Photo/Photo';
 import { Comments } from '../../components/Comments/Comments';
@@ -158,13 +158,15 @@ const User = () => {
                   &times;
                 </button>
                 <div className="author">
-                  {photo.user?.avatar && (
+                  {photo.user?.profilePictureUrl && (
                     <img
-                      src={IMAGE_BASE + photo.user.avatar}
+                      src={IMAGE_BASE + photo.user.profilePictureUrl}
                       alt={photo.user.name}
                     />
                   )}
-                  <h3>{photo.user?.name}</h3>
+                  <h3>
+                    <Link to={`/users/${photo.user.userName}`}>{photo.user?.name}</Link>
+                  </h3>
                 </div>
                 <h2>{photo.photoTitle}</h2>
                 {photo.category && <p className="category">{photo.category}</p>}
