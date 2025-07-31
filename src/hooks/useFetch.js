@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api, { getErrorMessage } from '../api/client';
 
-function useFetch(page) {
+function useFetch(page, params = {}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [list, setList] = useState([]);
@@ -22,6 +22,7 @@ function useFetch(page) {
           headers: {
             Range: 'photos=' + (page - 1) * 40 + '-' + 40 * page,
           },
+          params,
         });
 
         setList((prev) => [...new Set([...prev, ...res.data])]);
@@ -36,7 +37,7 @@ function useFetch(page) {
     return () => {
       controller.abort();
     };
-  }, [page]);
+  }, [page, JSON.stringify(params)]);
 
   return { loading, error, list };
 }
