@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Form } from '../../Styled';
 import { inputState } from '../../forms/Input';
 import { useSearchParams } from 'react-router-dom';
-import api from '../../api/client';
+import api, { getErrorMessage } from '../../api/client';
 
 const Container = styled.div`
   margin: 5em auto;
@@ -27,7 +27,7 @@ export const ChangePassword = () => {
       await api.post('/password/reset', { token, password: password1.value });
       setMessage('Password updated');
     } catch (err) {
-      setMessage('Failed to update password');
+      setMessage(getErrorMessage(err));
     }
   };
 
@@ -37,14 +37,28 @@ export const ChangePassword = () => {
       <form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label htmlFor="password1">New Password:</Form.Label>
-          <Form.Input id="password1" type="password" onChange={setPassword1} value={password1.value} required />
+          <Form.Input
+            id="password1"
+            type="password"
+            onChange={setPassword1}
+            value={password1.value}
+            required
+          />
         </Form.Group>
         <Form.Group>
           <Form.Label htmlFor="password2">Confirm Password:</Form.Label>
-          <Form.Input id="password2" type="password" onChange={setPassword2} value={password2.value} required />
-          {password1.value && password2.value && password1.value !== password2.value && (
-            <Form.FeedBack>Passwords do not match.</Form.FeedBack>
-          )}
+          <Form.Input
+            id="password2"
+            type="password"
+            onChange={setPassword2}
+            value={password2.value}
+            required
+          />
+          {password1.value &&
+            password2.value &&
+            password1.value !== password2.value && (
+              <Form.FeedBack>Passwords do not match.</Form.FeedBack>
+            )}
         </Form.Group>
         {message && <div>{message}</div>}
         <Form.Button type="submit">Change Password</Form.Button>
