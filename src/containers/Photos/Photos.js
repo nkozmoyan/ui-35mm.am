@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import Modal from '../../components/Modal/Modal';
+import { useNavigate, useParams } from 'react-router-dom';
 import Photo from '../../components/Photo/Photo';
-import { Comments } from '../../components/Comments/Comments';
+import PhotoModal from '../../components/PhotoModal/PhotoModal';
 import useFetch from '../../hooks/useFetch';
 import api from '../../api/client';
 
@@ -128,53 +127,12 @@ const Photos = () => {
       {loading && <p>Loading...</p>}
       {error && <p>Error!</p>}
       {id && photo ? (
-        <Modal>
-          <div className="photo-modal" onClick={closeModal}>
-            <span className="nav prev" onClick={showPrev}>
-              &#10094;
-            </span>
-            <div className="content" onClick={(e) => e.stopPropagation()}>
-              <div className="photo-wrapper">
-                <img alt={photo.photoTitle} src={IMAGE_BASE + photo.url.orig} />
-              </div>
-              <div className="info">
-                <button className="close" onClick={closeModal}>
-                  &times;
-                </button>
-                <div className="author">
-                  {photo.user?.profilePictureUrl && (
-                    <img
-                      src={IMAGE_BASE + photo.user.profilePictureUrl}
-                      alt={photo.user.name}
-                    />
-                  )}
-                  <h3>
-                    <Link to={`/users/${photo.user.userName}`}>
-                      {photo.user?.name}
-                    </Link>
-                  </h3>
-                </div>
-                <h2>{photo.photoTitle}</h2>
-                {photo.category && <p className="category">{photo.category}</p>}
-                {photo.likes !== undefined && (
-                  <p>{photo.likes} people likes this.</p>
-                )}
-                {photo.views !== undefined && <p>{photo.views} Views</p>}
-                {photo.createdAt && (
-                  <p>
-                    Posted: {new Date(photo.createdAt).toLocaleDateString()}
-                  </p>
-                )}
-                {photo.description && <p>{photo.description}</p>}
-
-                <Comments photoId={photo.photoId} />
-              </div>
-            </div>
-            <span className="nav next" onClick={showNext}>
-              &#10095;
-            </span>
-          </div>
-        </Modal>
+        <PhotoModal
+          photo={photo}
+          onClose={closeModal}
+          onPrev={showPrev}
+          onNext={showNext}
+        />
       ) : (
         list.map((p, idx) => (
           <Photo

@@ -18,6 +18,14 @@
 
 .photo-modal .content {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.photo-modal .main {
+  display: flex;
   align-items: flex-start;
   justify-content: center;
   width: 100%;
@@ -25,7 +33,7 @@
 
 .photo-modal .photo-wrapper {
   position: relative;
-  max-width: 70%;
+  width: 70%;
   max-height: 100%;
 }
 
@@ -62,7 +70,7 @@
   position: relative;
 }
 
-.photo-modal .info .close {
+.photo-modal .close {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -72,6 +80,7 @@
   font-size: 1.5em;
   cursor: pointer;
 }
+
 
 .photo-modal .author {
   display: flex;
@@ -97,7 +106,6 @@
   max-height: 30vh;
   overflow-y: auto;
   margin-top: 20px;
-  align-self: flex-start;
   padding: 10px 0;
 }
 
