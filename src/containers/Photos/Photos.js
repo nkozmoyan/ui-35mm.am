@@ -15,7 +15,8 @@ const Photos = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const IMAGE_BASE = process.env.REACT_APP_IMAGE_BASE_URL || 'http://post35mm.com/';
+  const IMAGE_BASE =
+    process.env.REACT_APP_IMAGE_BASE_URL || 'http://post35mm.com/';
 
   const handleObserver = useCallback((entries) => {
     const target = entries[0];
@@ -148,7 +149,9 @@ const Photos = () => {
                     />
                   )}
                   <h3>
-                    <Link to={`/users/${photo.user.userName}`}>{photo.user?.name}</Link>
+                    <Link to={`/users/${photo.user.userName}`}>
+                      {photo.user?.name}
+                    </Link>
                   </h3>
                 </div>
                 <h2>{photo.photoTitle}</h2>
@@ -158,15 +161,18 @@ const Photos = () => {
                 )}
                 {photo.views !== undefined && <p>{photo.views} Views</p>}
                 {photo.createdAt && (
-                  <p>Posted: {new Date(photo.createdAt).toLocaleDateString()}</p>
+                  <p>
+                    Posted: {new Date(photo.createdAt).toLocaleDateString()}
+                  </p>
                 )}
                 {photo.description && <p>{photo.description}</p>}
+
+                <Comments photoId={photo.photoId} />
               </div>
             </div>
             <span className="nav next" onClick={showNext}>
               &#10095;
             </span>
-            <Comments photoId={photo.photoId} />
           </div>
         </Modal>
       ) : (
