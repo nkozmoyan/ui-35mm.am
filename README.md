@@ -13,6 +13,7 @@ npm start
 
 - `REACT_APP_API_URL` - base URL for the backend API (defaults to `http://localhost:8080`).
 - `REACT_APP_IMAGE_BASE_URL` - base URL used to build photo image URLs (defaults to `http://post35mm.com/`).
+- `REACT_APP_RECAPTCHA_SITE_KEY` - Google reCAPTCHA v3 site key.
 
 Create a `.env` file or set these variables in your environment when starting the app.
 
