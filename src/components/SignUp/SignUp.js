@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import styled from 'styled-components';
 import { Form } from '../../Styled';
 import { inputState } from '../../forms/Input';
@@ -24,7 +26,8 @@ export const SignUp = () => {
   const [password2, setPassword2] = useState(new inputState());
   const [userNameAvailable, setUserNameAvailable] = useState(null);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const checkUserName = async () => {
     if (!userName.value) return;
@@ -47,14 +50,19 @@ export const SignUp = () => {
       return;
     }
     try {
+      let recaptcha = '';
+      if (executeRecaptcha) {
+        recaptcha = await executeRecaptcha('signup');
+      }
       await api.post('/users', {
         name: name.value,
         username: userName.value,
         email: email.value,
         password: password1.value,
+        recaptcha,
       });
-      setSuccess(true);
       setError('');
+      navigate('/verify-email', { state: { email: email.value } });
     } catch (err) {
       setError(getErrorMessage(err));
     }
@@ -146,7 +154,6 @@ export const SignUp = () => {
           </Form.Group>
 
           {error && <Form.FeedBack>{error}</Form.FeedBack>}
-          {success && <div>Account created successfully.</div>}
           <Form.Button type="submit">Create an Account</Form.Button>
         </form>
       </Container>

@@ -9,6 +9,7 @@ import { ForgotPassword } from './components/ForgotPassword/ForgotPassword';
 import { ChangePassword } from './components/ChangePassword/ChangePassword';
 import { Profile } from './components/Profile/Profile';
 import { Settings } from './components/Settings/Settings';
+import { VerifyEmail } from './components/VerifyEmail/VerifyEmail';
 import { useContext } from 'react';
 import { AuthContext } from './AuthContext';
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="signin" element={<SignIn />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="change-password" element={<ChangePassword />} />
+          <Route path="verify-email" element={<VerifyEmail />} />
           <Route path="profile" element={user ? <Profile /> : <SignIn />} />
           <Route path="settings" element={user ? <Settings /> : <SignIn />} />
         </Route>
