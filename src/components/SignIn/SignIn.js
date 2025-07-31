@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Form } from '../../Styled';
 import { inputState } from '../../forms/Input';
 import { AuthContext } from '../../AuthContext';
-import api from '../../api/client';
+import api, { getErrorMessage } from '../../api/client';
 
 const Container = styled.div`
   margin: 5em auto;
@@ -25,7 +25,7 @@ export const SignIn = () => {
       });
       login({ user: res.data.user, token: res.data.token });
     } catch (err) {
-      setError('Invalid email or password');
+      setError(getErrorMessage(err));
     }
   };
 
@@ -35,11 +35,23 @@ export const SignIn = () => {
       <form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label htmlFor="email">Email:</Form.Label>
-          <Form.Input id="email" type="email" onChange={setEmail} value={email.value} required />
+          <Form.Input
+            id="email"
+            type="email"
+            onChange={setEmail}
+            value={email.value}
+            required
+          />
         </Form.Group>
         <Form.Group>
           <Form.Label htmlFor="password">Password:</Form.Label>
-          <Form.Input id="password" type="password" onChange={setPassword} value={password.value} required />
+          <Form.Input
+            id="password"
+            type="password"
+            onChange={setPassword}
+            value={password.value}
+            required
+          />
         </Form.Group>
         {error && <Form.FeedBack>{error}</Form.FeedBack>}
         <Form.Button type="submit">Login</Form.Button>

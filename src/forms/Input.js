@@ -36,33 +36,36 @@ export const Input = (props) => {
         setValue((prev) => {
           let pristine = prev.pristine,
             dirty = prev.dirty,
-            invalid = prev.invalid,
-            valid = prev.valid,
+            valid = true,
             error = '';
 
-          if (props.required && e.target.value === '') {
+          const value = e.target.value;
+
+          if (props.required && value === '') {
             valid = false;
             error = 'This field is required.';
           } else if (validatorFn) {
-            valid = validatorFn(e.target.value);
-            error = 'This field should contain only alphanumeric symbols.';
+            valid = validatorFn(value);
+            if (!valid) {
+              error = 'This field should contain only alphanumeric symbols.';
+            }
           }
 
-          invalid = !valid;
+          const invalid = !valid;
 
-          if (prev.pristine && e.target.value !== prev.initialValue) {
+          if (prev.pristine && value !== prev.initialValue) {
             pristine = false;
             dirty = true;
           }
 
           return {
             ...prev,
-            value: e.target.value,
+            value,
             pristine,
             dirty,
-            invalid: invalid,
-            valid: valid,
-            error: error,
+            invalid,
+            valid,
+            error,
           };
         });
       }}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Form } from '../../Styled';
 import { inputState } from '../../forms/Input';
-import api from '../../api/client';
+import api, { getErrorMessage } from '../../api/client';
 
 const Container = styled.div`
   margin: 5em auto;
@@ -56,7 +56,7 @@ export const SignUp = () => {
       setSuccess(true);
       setError('');
     } catch (err) {
-      setError('Failed to create account');
+      setError(getErrorMessage(err));
     }
   };
 
@@ -88,6 +88,7 @@ export const SignUp = () => {
               value={userName.value}
               type="text"
               id="userName"
+              required
             ></Form.Input>
             {userNameAvailable === false && (
               <Form.FeedBack>Username is taken.</Form.FeedBack>
@@ -104,6 +105,7 @@ export const SignUp = () => {
               value={email.value}
               type="text"
               id="email"
+              required
             ></Form.Input>
             {email.invalid && (email.dirty || email.touched) && (
               <Form.FeedBack>Email is required.</Form.FeedBack>

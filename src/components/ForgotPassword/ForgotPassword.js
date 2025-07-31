@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Form } from '../../Styled';
 import { inputState } from '../../forms/Input';
-import api from '../../api/client';
+import api, { getErrorMessage } from '../../api/client';
 
 const Container = styled.div`
   margin: 5em auto;
@@ -19,7 +19,7 @@ export const ForgotPassword = () => {
       await api.post('/password/forgot', { emailOrUsername: email.value });
       setMessage('Reset link sent to your email.');
     } catch (err) {
-      setMessage('Could not send reset link.');
+      setMessage(getErrorMessage(err));
     }
   };
 
@@ -29,7 +29,13 @@ export const ForgotPassword = () => {
       <form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label htmlFor="email">Email:</Form.Label>
-          <Form.Input id="email" type="email" onChange={setEmail} value={email.value} required />
+          <Form.Input
+            id="email"
+            type="email"
+            onChange={setEmail}
+            value={email.value}
+            required
+          />
         </Form.Group>
         <Form.Group>
           <div className="recaptcha">reCAPTCHA</div>
