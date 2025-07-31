@@ -20,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Photos />} />
+          <Route path="photos/:id" element={<Photos />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
