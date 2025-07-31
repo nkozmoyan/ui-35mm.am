@@ -1,3 +1,4 @@
+
 .photo-modal {
   position: fixed;
   top: 0;
@@ -6,12 +7,20 @@
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.9);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #fff;
   box-sizing: border-box;
   padding: 20px;
   z-index: 1000;
+}
+
+.photo-modal .content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .photo-modal .photo-wrapper {
@@ -25,6 +34,7 @@
   max-height: 80vh;
   object-fit: contain;
 }
+
 
 .photo-modal .nav {
   position: absolute;
@@ -42,6 +52,7 @@
 .photo-modal .nav.next {
   right: 10px;
 }
+
 
 .photo-modal .info {
   width: 30%;
@@ -75,7 +86,11 @@
   margin-right: 10px;
 }
 
-.comments {
+
+.photo-modal .comments {
+  width: 70%;
+  max-height: 30vh;
+  overflow-y: auto;
   margin-top: 20px;
 }
 

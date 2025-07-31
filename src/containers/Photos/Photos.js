@@ -52,30 +52,36 @@ const Photos = () => {
     navigate('/');
   };
 
-  const showPrev = (e) => {
-    e.stopPropagation();
-    if (index > 0) {
-      const newIndex = index - 1;
-      const newPhoto = list[newIndex];
-      if (newPhoto) {
+  const showPrev = useCallback(
+    (e) => {
+      e?.stopPropagation();
+      if (index > 0) {
+        const newIndex = index - 1;
+        const newPhoto = list[newIndex];
+        if (newPhoto) {
+          setPhoto(newPhoto);
+          setIndex(newIndex);
+          navigate(`/photos/${newPhoto.photoId}`);
+        }
+      }
+    },
+    [index, list, navigate]
+  );
+
+  const showNext = useCallback(
+    (e) => {
+      e?.stopPropagation();
+      if (index !== null && index < list.length - 1) {
+        const newIndex = index + 1;
+        const newPhoto = list[newIndex];
+        if (!newPhoto) return;
         setPhoto(newPhoto);
         setIndex(newIndex);
         navigate(`/photos/${newPhoto.photoId}`);
       }
-    }
-  };
-
-  const showNext = (e) => {
-    e.stopPropagation();
-    if (index !== null && index < list.length - 1) {
-      const newIndex = index + 1;
-      const newPhoto = list[newIndex];
-      if (!newPhoto) return;
-      setPhoto(newPhoto);
-      setIndex(newIndex);
-      navigate(`/photos/${newPhoto.photoId}`);
-    }
-  };
+    },
+    [index, list, navigate]
+  );
 
   useEffect(() => {
     if (!id) {
@@ -97,6 +103,24 @@ const Photos = () => {
       .catch(() => setPhoto(null));
   }, [id, list]);
 
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === 'ArrowLeft') {
+        showPrev();
+      } else if (e.key === 'ArrowRight') {
+        showNext();
+      }
+    };
+
+    if (photo) {
+      window.addEventListener('keydown', handleKey);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, [photo, showPrev, showNext]);
+
   return (
     <div className="photos">
       <div ref={loader} />
@@ -105,40 +129,42 @@ const Photos = () => {
       {id && photo ? (
         <Modal>
           <div className="photo-modal" onClick={closeModal}>
-            <div className="photo-wrapper" onClick={(e) => e.stopPropagation()}>
-              <span className="nav prev" onClick={showPrev}>
-                &#10094;
-              </span>
-              <img alt={photo.photoTitle} src={IMAGE_BASE + photo.url.orig} />
-              <span className="nav next" onClick={showNext}>
-                &#10095;
-              </span>
-            </div>
-            <div className="info" onClick={(e) => e.stopPropagation()}>
-              <button className="close" onClick={closeModal}>
-                &times;
-              </button>
-              <div className="author">
-                {photo.user?.avatar && (
-                  <img
-                    src={IMAGE_BASE + photo.user.avatar}
-                    alt={photo.user.name}
-                  />
-                )}
-                <h3>{photo.user?.name}</h3>
+            <span className="nav prev" onClick={showPrev}>
+              &#10094;
+            </span>
+            <div className="content" onClick={(e) => e.stopPropagation()}>
+              <div className="photo-wrapper">
+                <img alt={photo.photoTitle} src={IMAGE_BASE + photo.url.orig} />
               </div>
-              <h2>{photo.photoTitle}</h2>
-              {photo.category && <p className="category">{photo.category}</p>}
-              {photo.likes !== undefined && (
-                <p>{photo.likes} people likes this.</p>
-              )}
-              {photo.views !== undefined && <p>{photo.views} Views</p>}
-              {photo.createdAt && (
-                <p>Posted: {new Date(photo.createdAt).toLocaleDateString()}</p>
-              )}
-              {photo.description && <p>{photo.description}</p>}
-              <Comments photoId={photo.photoId} />
+              <div className="info">
+                <button className="close" onClick={closeModal}>
+                  &times;
+                </button>
+                <div className="author">
+                  {photo.user?.avatar && (
+                    <img
+                      src={IMAGE_BASE + photo.user.avatar}
+                      alt={photo.user.name}
+                    />
+                  )}
+                  <h3>{photo.user?.name}</h3>
+                </div>
+                <h2>{photo.photoTitle}</h2>
+                {photo.category && <p className="category">{photo.category}</p>}
+                {photo.likes !== undefined && (
+                  <p>{photo.likes} people likes this.</p>
+                )}
+                {photo.views !== undefined && <p>{photo.views} Views</p>}
+                {photo.createdAt && (
+                  <p>Posted: {new Date(photo.createdAt).toLocaleDateString()}</p>
+                )}
+                {photo.description && <p>{photo.description}</p>}
+              </div>
             </div>
+            <span className="nav next" onClick={showNext}>
+              &#10095;
+            </span>
+            <Comments photoId={photo.photoId} />
           </div>
         </Modal>
       ) : (
