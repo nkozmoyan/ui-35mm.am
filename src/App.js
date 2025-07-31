@@ -2,6 +2,7 @@ import './App.css';
 import { Routes, Route, Outlet, Link } from 'react-router-dom';
 
 import Photos from './containers/Photos/Photos';
+import User from './containers/User/User';
 import Header from './layout/Header/Header';
 import { SignUp } from './components/SignUp/SignUp';
 import { SignIn } from './components/SignIn/SignIn';
@@ -21,6 +22,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Photos />} />
           <Route path="photos/:id" element={<Photos />} />
+          <Route path="users/:userName" element={<User />} />
+          <Route path="users/:userName/photos/:id" element={<User />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
