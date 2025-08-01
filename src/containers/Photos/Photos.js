@@ -18,12 +18,15 @@ const Photos = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const handleObserver = useCallback((entries) => {
-    const target = entries[0];
-    if (target.isIntersecting) {
-      setPage((prev) => prev + 1);
-    }
-  }, []);
+  const handleObserver = useCallback(
+    (entries) => {
+      const target = entries[0];
+      if (target.isIntersecting && !loading) {
+        setPage((prev) => prev + 1);
+      }
+    },
+    [loading]
+  );
 
   useEffect(() => {
     const option = {
@@ -43,7 +46,7 @@ const Photos = () => {
     return () => {
       if (target) observer.unobserve(target);
     };
-  }, [handleObserver]);
+  }, [handleObserver, loading]);
 
   const openPhoto = (p, idx) => {
     setPhoto(p);
