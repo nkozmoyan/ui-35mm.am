@@ -28,7 +28,10 @@ function useFetch(page, params = {}) {
         setList((prev) => [...new Set([...prev, ...res.data])]);
         setLoading(false);
       } catch (err) {
-        setError(getErrorMessage(err));
+        if (err.code !== 'ERR_CANCELED') {
+          setError(getErrorMessage(err));
+        }
+        setLoading(false);
       }
     };
 
