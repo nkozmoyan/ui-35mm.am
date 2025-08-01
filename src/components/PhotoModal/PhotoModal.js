@@ -56,6 +56,17 @@ const PhotoModal = ({ photo, onClose, onPrev, onNext }) => {
     };
   }, [photo]);
 
+  useEffect(() => {
+    if (!photo) return;
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'canonical');
+    link.setAttribute('href', `/photos/${photo.photoId}`);
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, [photo]);
+
   // Early return after hooks
   if (!photo) return null;
 
@@ -65,16 +76,6 @@ const PhotoModal = ({ photo, onClose, onPrev, onNext }) => {
     e.stopPropagation();
     onClose();
   };
-
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'canonical');
-    link.setAttribute('href', `/photos/${photo.photoId}`);
-    document.head.appendChild(link);
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, [photo.photoId]);
 
   return (
     <Modal>
