@@ -23,7 +23,6 @@ function App() {
           <Route index element={<Photos />} />
           <Route path="photos/:id" element={<Photos />} />
           <Route path="users/:userName" element={<User />} />
-          <Route path="users/:userName/photos/:id" element={<User />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
