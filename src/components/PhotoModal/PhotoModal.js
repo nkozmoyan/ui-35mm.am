@@ -66,6 +66,16 @@ const PhotoModal = ({ photo, onClose, onPrev, onNext }) => {
     onClose();
   };
 
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'canonical');
+    link.setAttribute('href', `/photos/${photo.photoId}`);
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, [photo.photoId]);
+
   return (
     <Modal>
       <div className="photo-modal" onClick={onClose}>

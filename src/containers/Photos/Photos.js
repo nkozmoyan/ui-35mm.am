@@ -1,21 +1,22 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Photo from '../../components/Photo/Photo';
 import PhotoModal from '../../components/PhotoModal/PhotoModal';
 import useFetch from '../../hooks/useFetch';
 import api from '../../api/client';
 
 const Photos = () => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [photo, setPhoto] = useState(null);
   const [index, setIndex] = useState(null);
-  const { loading, error, list } = useFetch(page);
+  const [searchParams] = useSearchParams();
+  const source = searchParams.get('source');
+  const user = searchParams.get('user');
+  const params = user ? { userName: user, featured: false } : {};
+  const { loading, error, list } = useFetch(page, params);
   const loader = useRef(null);
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const IMAGE_BASE =
-    process.env.REACT_APP_IMAGE_BASE_URL || 'http://post35mm.com/';
 
   const handleObserver = useCallback((entries) => {
     const target = entries[0];
@@ -39,17 +40,23 @@ const Photos = () => {
       observer.observe(loader.current);
     }
 
-    return () => observer.unobserve(target);
+    return () => {
+      if (target) observer.unobserve(target);
+    };
   }, [handleObserver]);
 
   const openPhoto = (p, idx) => {
     setPhoto(p);
     setIndex(idx);
-    navigate(`/photos/${p.photoId}`);
+    navigate(`/photos/${p.photoId}?source=feed`);
   };
 
   const closeModal = () => {
-    navigate('/');
+    if (source === 'profile' && photo?.user?.userName) {
+      navigate(`/users/${photo.user.userName}`);
+    } else {
+      navigate('/');
+    }
   };
 
   const showPrev = useCallback(
@@ -61,11 +68,15 @@ const Photos = () => {
         if (newPhoto) {
           setPhoto(newPhoto);
           setIndex(newIndex);
-          navigate(`/photos/${newPhoto.photoId}`);
+          navigate(
+            `/photos/${newPhoto.photoId}?source=${
+              source || 'feed'
+            }${user ? `&user=${user}` : ''}`
+          );
         }
       }
     },
-    [index, list, navigate]
+    [index, list, navigate, source, user]
   );
 
   const showNext = useCallback(
@@ -77,10 +88,14 @@ const Photos = () => {
         if (!newPhoto) return;
         setPhoto(newPhoto);
         setIndex(newIndex);
-        navigate(`/photos/${newPhoto.photoId}`);
+        navigate(
+          `/photos/${newPhoto.photoId}?source=${
+            source || 'feed'
+          }${user ? `&user=${user}` : ''}`
+        );
       }
     },
-    [index, list, navigate]
+    [index, list, navigate, source, user]
   );
 
   useEffect(() => {
@@ -123,9 +138,6 @@ const Photos = () => {
 
   return (
     <div className="photos">
-      <div ref={loader} />
-      {loading && <p>Loading...</p>}
-      {error && <p>Error!</p>}
       {id && photo ? (
         <PhotoModal
           photo={photo}
@@ -134,13 +146,18 @@ const Photos = () => {
           onNext={showNext}
         />
       ) : (
-        list.map((p, idx) => (
-          <Photo
-            onClick={(photo) => openPhoto(photo, idx)}
-            key={p.photoId}
-            photo={p}
-          />
-        ))
+        <>
+          {list.map((p, idx) => (
+            <Photo
+              onClick={(photo) => openPhoto(photo, idx)}
+              key={p.photoId}
+              photo={p}
+            />
+          ))}
+          <div ref={loader} />
+          {loading && <p>Loading...</p>}
+          {error && <p>Error!</p>}
+        </>
       )}
     </div>
   );
