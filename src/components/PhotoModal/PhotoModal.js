@@ -1,6 +1,6 @@
 import Modal from '../Modal/Modal';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Comments } from '../Comments/Comments';
 import '../Photo/Photo.css';
 
@@ -8,11 +8,9 @@ const IMAGE_BASE =
   process.env.REACT_APP_IMAGE_BASE_URL || 'http://post35mm.com/';
 
 const PhotoModal = ({ photo, onClose, onPrev, onNext }) => {
-  if (!photo) return null;
+  // Always call hooks at the top level, handle conditions inside
 
-  const stop = (e) => e.stopPropagation();
-
-  const formatDate = (dateStr) => {
+  const formatDate = useCallback((dateStr) => {
     const date = new Date(dateStr);
     const now = new Date();
     const diff = now - date;
@@ -23,28 +21,55 @@ const PhotoModal = ({ photo, onClose, onPrev, onNext }) => {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
     return 'Today';
-  };
+  }, []);
 
+  // Handle keyboard events - always call useEffect, handle condition inside
   useEffect(() => {
+    // If no photo, don't set up event listener
+    if (!photo) return;
+
     const handleKey = (e) => {
       if (e.key === 'Escape') {
         onClose();
       }
+      if (e.key === 'ArrowLeft') {
+        onPrev();
+      }
+      if (e.key === 'ArrowRight') {
+        onNext();
+      }
     };
+
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose]);
+  }, [onClose, onPrev, onNext, photo]); // Include all dependencies
+
+  // Handle body scroll lock - another useEffect example
+  useEffect(() => {
+    if (!photo) return;
+
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [photo]);
+
+  // Early return after hooks
+  if (!photo) return null;
+
+  const stop = (e) => e.stopPropagation();
+
+  const handleCloseClick = (e) => {
+    e.stopPropagation();
+    onClose();
+  };
 
   return (
     <Modal>
       <div className="photo-modal" onClick={onClose}>
-        <button
-          className="close"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
-        >
+        <button className="close" onClick={handleCloseClick}>
           &times;
         </button>
         <span className="nav prev" onClick={onPrev}>
@@ -92,4 +117,3 @@ const PhotoModal = ({ photo, onClose, onPrev, onNext }) => {
 };
 
 export default PhotoModal;
-
